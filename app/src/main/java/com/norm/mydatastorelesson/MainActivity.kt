@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dataStoreManager = DataStoreManager(this)
+        val dataStoreManager = ProtoDataStoreManager(this)
         setContent {
             MyDataStoreLessonTheme {
                 val settingsState = dataStoreManager
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    dataStoreManager: DataStoreManager,
+    dataStoreManager: ProtoDataStoreManager,
     textSizeState: Int
 ) {
     val scope = rememberCoroutineScope()
