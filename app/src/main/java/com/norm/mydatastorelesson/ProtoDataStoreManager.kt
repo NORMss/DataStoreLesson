@@ -19,7 +19,7 @@ class ProtoDataStoreManager(val context: Context) {
     }
 
     suspend fun saveSettings(settingsData: SettingsData) {
-        context.protoDataStore.updateData { data ->
+        context.protoDataStore.updateData {
             settingsData
         }
     }

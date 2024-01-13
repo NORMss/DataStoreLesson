@@ -16,7 +16,7 @@ object SettingsSerializer : Serializer<SettingsData> {
         return try {
             Json.decodeFromString(
                 deserializer = SettingsData.serializer(),
-                string = input.readBytes().toString()
+                string = input.readBytes().decodeToString()
             )
         } catch (e: SerializationException) {
             e.printStackTrace()
