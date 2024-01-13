@@ -17,10 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,27 +36,14 @@ class MainActivity : ComponentActivity() {
         val dataStoreManager = DataStoreManager(this)
         setContent {
             MyDataStoreLessonTheme {
-                val bgColorState = remember {
-                    mutableStateOf(
-                        MyLightRed.value
-                    )
-                }
-                val textSizeState = remember {
-                    mutableStateOf(
-                        48
-                    )
-                }
-                LaunchedEffect(key1 = true) {
-                    dataStoreManager.getSettings().collect { settings ->
-                        bgColorState.value = settings.bgColor.toULong()
-                        textSizeState.value = settings.textSize
-                    }
-                }
+                val settingsState = dataStoreManager
+                    .getSettings()
+                    .collectAsState(initial = SettingsData())
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color(bgColorState.value)
+                    color = Color(settingsState.value.bgColor)
                 ) {
-                    MainScreen(dataStoreManager, textSizeState)
+                    MainScreen(dataStoreManager, settingsState.value.textSize)
                 }
             }
         }
@@ -67,7 +51,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(dataStoreManager: DataStoreManager, textSizeState: MutableState<Int>) {
+fun MainScreen(
+    dataStoreManager: DataStoreManager,
+    textSizeState: Int
+) {
     val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -84,7 +71,7 @@ fun MainScreen(dataStoreManager: DataStoreManager, textSizeState: MutableState<I
             Text(
                 text = "My DataStore",
                 color = Color.White,
-                fontSize = textSizeState.value.sp
+                fontSize = textSizeState.sp
             )
         }
         Button(onClick = {
@@ -92,7 +79,7 @@ fun MainScreen(dataStoreManager: DataStoreManager, textSizeState: MutableState<I
                 dataStoreManager.saveSettings(
                     SettingsData(
                         48,
-                        MyLightRed.value.toLong()
+                        MyLightRed.value
                     )
                 )
             }
@@ -105,7 +92,7 @@ fun MainScreen(dataStoreManager: DataStoreManager, textSizeState: MutableState<I
                 dataStoreManager.saveSettings(
                     SettingsData(
                         24,
-                        MyLightGreen.value.toLong()
+                        MyLightGreen.value
                     )
                 )
             }
@@ -118,7 +105,7 @@ fun MainScreen(dataStoreManager: DataStoreManager, textSizeState: MutableState<I
                 dataStoreManager.saveSettings(
                     SettingsData(
                         12,
-                        MyLightBlue.value.toLong()
+                        MyLightBlue.value
                     )
                 )
             }
